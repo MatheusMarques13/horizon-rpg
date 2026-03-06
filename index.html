@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horizon — Beyond the Fading Light</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="ambient"></div>
+<div class="horizon-line"></div>
+<div class="particles" id="particles"></div>
+
+<!-- MENU SCREEN -->
+<div class="screen active" id="menuScreen">
+  <div class="menu-container">
+    <div class="title">Horizon</div>
+    <div class="subtitle">beyond the fading light</div>
+    <div class="menu-options">
+      <button class="menu-item" onclick="startBattle()">Jornada</button>
+      <button class="menu-item" onclick="alert('Em breve...')">Configurações</button>
+      <button class="menu-item" onclick="alert('Criado por Matheus Marques — Retromynd')">Créditos</button>
+    </div>
+  </div>
+  <div class="press-start">— awaiting your call —</div>
+  <div class="version">v0.7 horizon</div>
+</div>
+
+<!-- BATTLE SCREEN -->
+<div class="screen" id="battleScreen">
+  <button class="back-btn" onclick="showScreen('menuScreen')">← menu</button>
+  <canvas id="battleCanvas"></canvas>
+  <div class="battle-ui">
+    <div class="battle-hud">
+      <div class="hud-box">
+        <div class="name pn" id="pName">Viajante — Nv.1</div>
+        <div class="bar-row"><span class="bar-label">HP</span><div class="bar-track"><div class="bar-fill bar-hp" id="pHpBar" style="width:100%"></div></div><span class="bar-val" id="pHpVal">100/100</span></div>
+        <div class="bar-row"><span class="bar-label">MP</span><div class="bar-track"><div class="bar-fill bar-mp" id="pMpBar" style="width:100%"></div></div><span class="bar-val" id="pMpVal">50/50</span></div>
+        <div class="bar-row"><span class="bar-label">XP</span><div class="bar-track"><div class="bar-fill bar-xp" id="pXpBar" style="width:0%"></div></div><span class="bar-val" id="pXpVal">0/30</span></div>
+      </div>
+      <div class="hud-box">
+        <div class="name en" id="eName">Goblin</div>
+        <div class="bar-row"><span class="bar-label">HP</span><div class="bar-track"><div class="bar-fill bar-hp" id="eHpBar" style="width:100%"></div></div><span class="bar-val" id="eHpVal">50/50</span></div>
+      </div>
+    </div>
+    <div class="blog" id="battleLog"><div class="log-system">A jornada começa...</div></div>
+    <div class="battle-actions">
+      <button class="act-btn" onclick="doAction('attack')">Ataque</button>
+      <button class="act-btn" onclick="doAction('magic')">Magia</button>
+      <button class="act-btn" onclick="doAction('heal')">Cura</button>
+      <button class="act-btn" onclick="doAction('defend')">Defender</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/sprites.js"></script>
+<script src="js/battle.js"></script>
+<script src="js/menu.js"></script>
+</body>
+</html>
