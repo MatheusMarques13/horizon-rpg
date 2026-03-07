@@ -97,6 +97,8 @@ function initGame() {
   resizeCanvas(); initSprites(); spawnEnemy();
   document.getElementById('battleLog').innerHTML = '<div class="log-system">Uma sombra se move no horizonte...</div>';
   drawBattle();
+  // Start battle BGM
+  AudioEngine.startBattle();
 }
 
 function spawnEnemy() {
@@ -133,24 +135,30 @@ function doAction(action) {
     case 'attack':
       dmg = player.atk + Math.floor(Math.random() * 6); eData.hp -= dmg;
       heroAttacking = true; atkT = 0;
+      AudioEngine.sfxAttack();
       setTimeout(() => { enemyShake = 14; enemyFlash = 10; }, 350);
       log(`Lâmina corta ${eData.name} — <strong>${dmg}</strong> dano`, 'player'); break;
     case 'magic':
       if (player.mp < 20) { log('MP insuficiente...', 'system'); busy = false; return; }
       player.mp -= 20; dmg = player.atk * 2 + Math.floor(Math.random() * 10); eData.hp -= dmg;
+      AudioEngine.sfxMagic();
       setTimeout(() => { enemyShake = 20; enemyFlash = 14; }, 100);
       log(`Luz do horizonte! <strong>${dmg}</strong> dano arcano`, 'player'); break;
     case 'heal':
       if (player.mp < 15) { log('MP insuficiente...', 'system'); busy = false; return; }
       player.mp -= 15; const heal = 30 + player.level * 5;
       player.hp = Math.min(player.maxHp, player.hp + heal);
+      AudioEngine.sfxHeal();
       log(`Recupera <strong>${heal}</strong> HP`, 'heal'); break;
     case 'defend':
-      defending = true; log('Postura defensiva.', 'player'); break;
+      defending = true;
+      AudioEngine.sfxDefend();
+      log('Postura defensiva.', 'player'); break;
   }
   updateHUD();
   if (eData.hp <= 0) {
     const xp = 15 + turnCount * 5; player.xp += xp;
+    AudioEngine.sfxEnemyDefeated();
     log(`${eData.name} cai. +${xp} XP`, 'system');
     if (player.xp >= player.xpNext) levelUp();
     turnCount++; spawnEnemy();
@@ -162,9 +170,15 @@ function doAction(action) {
     if (defending) ed = Math.floor(ed / 2);
     player.hp -= ed;
     enemyAttacking = true; atkT = 0;
+    AudioEngine.sfxEnemyHit();
     setTimeout(() => { heroShake = 12; heroFlash = 10; }, 350);
     log(`${eData.name} ataca — <strong>${ed}</strong>${defending ? ' (def)' : ''}`, 'enemy');
-    if (player.hp <= 0) { player.hp = 0; log('Você cai... escuridão.', 'system'); log('<strong>Fim. Volte ao menu.</strong>', 'system'); }
+    if (player.hp <= 0) {
+      player.hp = 0;
+      AudioEngine.sfxDeath();
+      log('Você cai... escuridão.', 'system');
+      log('<strong>Fim. Volte ao menu.</strong>', 'system');
+    }
     updateHUD(); busy = false;
   }, 700);
 }
@@ -174,5 +188,6 @@ function levelUp() {
   player.maxHp += 20; player.hp = player.maxHp;
   player.maxMp += 10; player.mp = player.maxMp;
   player.atk += 5;
+  AudioEngine.sfxLevelUp();
   log(`Nível ${player.level}! Stats aumentaram.`, 'system');
 }
